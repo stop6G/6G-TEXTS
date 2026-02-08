@@ -68,7 +68,7 @@
 <body class="bg-black text-gray-400 font-sans antialiased min-h-screen flex flex-col">
 
     <!-- Minimal Header -->
-    <header class="w-full max-w-2xl mx-auto py-12 px-6 flex justify-between items-end border-b border-white/10 mb-8">
+    <header class="w-full max-w-4xl mx-auto py-12 px-6 flex justify-between items-end border-b border-white/10 mb-8">
         <div>
             <div class="flex items-center gap-4">
                 <h1 onclick="app.renderHome()" class="text-2xl font-bold text-white cursor-pointer tracking-tight hover:text-gray-200 transition-colors">
@@ -81,7 +81,7 @@
     </header>
 
     <!-- Main Content Area -->
-    <main id="app" class="w-full max-w-2xl mx-auto px-6 flex-grow pb-20">
+    <main id="app" class="w-full max-w-4xl mx-auto px-6 flex-grow pb-20">
         <!-- Content injected via JS -->
     </main>
 
@@ -327,7 +327,15 @@
                 window.scrollTo(0, 0);
 
                 // Loading State
-                this.container.innerHTML = `<div class="text-gray-500 font-mono animate-pulse mt-12">Fetching from GitHub...</div>`;
+                this.container.innerHTML = `<div class="animate-pulse space-y-4 max-w-4xl mt-12">
+                        <div class="h-8 bg-white/10 rounded w-3/4"></div>
+                        <div class="h-4 bg-white/5 rounded w-1/4 mb-12"></div>
+                        <div class="space-y-3">
+                            <div class="h-4 bg-white/5 rounded"></div>
+                            <div class="h-4 bg-white/5 rounded"></div>
+                            <div class="h-4 bg-white/5 rounded w-5/6"></div>
+                        </div>
+                    </div>`;
 
                 try {
                     const post = await this.fetchPostData(path);
@@ -505,7 +513,7 @@
                     let footnotesHtml = '';
                     const footnoteIds = Object.keys(footnotes).sort((a,b) => a - b);
                     if (footnoteIds.length > 0) {
-                        footnotesHtml = `<div class="mt-16 pt-8 border-t border-white/10"><ul class="space-y-3">${footnoteIds.map(id => `<li id="fn-${id}" class="text-sm text-gray-500 flex gap-3"><button onclick="app.scrollToId('ref-${id}')" class="font-mono text-blue-400 hover:text-white transition-colors shrink-0" title="Back to text">[${id}]</button><span>${this.parseMarkdown(footnotes[id])}</span></li>`).join('')}</ul></div>`;
+                        footnotesHtml = `<div class="mt-16 pt-8 border-t border-white/10"><ul class="space-y-3">${footnoteIds.map(id => `<li id="fn-${id}" class="text-sm text-gray-500 flex gap-3"><button onclick="app.scrollToId('ref-${id}')" class="font-mono text-blue-400 hover:text-white transition-colors shrink-0" title="Back to text">[${id}]</button><span>${this.parseMarkdown(footnotes[id])} <button onclick="app.scrollToId('ref-${id}')" class="footnote-back text-gray-600 hover:text-white" title="Back to text">↩</button></span></li>`).join('')}</ul></div>`;
                     }
 
                     const html = `
