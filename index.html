@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>stop6g.eu - texts</title>
+    <title>stop6G.txt</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- NLP Library: Compromise.js -->
     <script src="https://unpkg.com/compromise"></script>
@@ -150,7 +150,6 @@
             },
 
             updateStatus(msg) {
-                // No-op or console log since footer element is removed
                 console.log("Status:", msg);
             },
 
@@ -196,7 +195,7 @@
                 text = text.replace(/\*(.*?)\*/gim, '<i>$1</i>');
 
                 // Links [text](url) - Added support for clickable links in footnotes
-                text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" class="text-gray-300 underline decoration-dotted hover:text-white transition-colors">$1</a>');
+                text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" class="text-pink-500 hover:text-pink-400 transition-colors underline decoration-dotted">$1</a>');
                 
                 return text;
             },
@@ -355,18 +354,24 @@
                     
                     const bodyLines = [];
                     const footnotes = {};
-                    const footnoteDefRegex = /^\[(\d+)\]\s+(.*)$/;
+                    
+                    // UPDATED REGEX: Handles optional bolding **[1]** and allows matching multiline content
+                    // Capture group 1: optional **, Group 2: ID, Group 3: Content
+                    const footnoteDefRegex = /^(\*\*)?\[(\d+)\]\s*(.*)$/;
                     
                     let currentFootnoteId = null;
 
                     bodyLinesRaw.forEach(line => {
                         const match = line.match(footnoteDefRegex);
                         if (match) {
-                            currentFootnoteId = match[1];
-                            footnotes[currentFootnoteId] = match[2];
+                            currentFootnoteId = match[2]; // ID is now group 2
+                            // Prepend the optional bold marker (match[1]) to content (match[3]) if it existed
+                            // ensuring formatting consistency if user wanted bold
+                            const content = (match[1] || '') + match[3]; 
+                            footnotes[currentFootnoteId] = content;
                         } else if (currentFootnoteId && line.trim().length > 0) {
                             // Continuation of previous footnote (multi-line footnote support)
-                            footnotes[currentFootnoteId] += " " + line.trim();
+                            footnotes[currentFootnoteId] += "\n" + line.trim();
                         } else if (currentFootnoteId && line.trim().length === 0) {
                             // Empty line separates footnotes, stop continuation
                             currentFootnoteId = null;
