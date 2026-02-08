@@ -35,8 +35,8 @@ If your "Trust Score" drops (you walk strangely because you are injured, or the 
 
 This shifts the burden of proof. In a free society, the state must prove you are guilty to search you. In a Zero Trust 6G society, **you must continuously prove you are innocent to be connected.** You are no longer a citizen with rights; you are a **"Permanent Suspect"** under digital parole, where the check-in officer is an AI that never sleeps.
 
-Eh! No sci-fi here... look at **xTrust-6G**.
-Launched in **January 2025** by the European Union, this massive project is currently building the **"User Behavior Policy Engines"** [45] that will power this system. Their stated goal? To establish "Zero Trust" by leveraging **"behavioral insights gathered from the 6G infrastructure."** [46]
+Eh! No sci-fi here... look at **xTrust-6G**. Launched in **January 2025** by the European Union, this massive project is currently building the **"User Behavior Policy Engines"** [45] that will power this system. Their stated goal? To establish "Zero Trust" by leveraging **"behavioral insights gathered from the 6G infrastructure."** [46]
+
 The cage is being welded together as we speak.
 
 ---
