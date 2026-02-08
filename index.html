@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimal Blog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- NLP Library: Compromise.js -->
+    <script src="https://unpkg.com/compromise"></script>
+    <!-- Google Fonts: Metal Mania & VT323 (for Terminal) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Metal+Mania&family=VT323&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Custom smooth scrolling and selection color */
+        html { scroll-behavior: smooth; }
+        ::selection { background-color: #3f3f46; color: white; }
+        
+        /* Typography refinements */
+        .prose p { margin-bottom: 1.5em; line-height: 1.75; }
+        .prose h2 { font-size: 1.5rem; font-weight: 600; margin-top: 2em; margin-bottom: 1em; color: #e5e5e5; }
+        .prose h3 { font-size: 1.25rem; font-weight: 600; margin-top: 1.5em; margin-bottom: 0.75em; color: #d4d4d8; }
+        .prose ul { list-style-type: disc; padding-left: 1.5em; margin-bottom: 1.5em; }
+        .prose li { margin-bottom: 0.5em; }
+        .prose blockquote { border-left: 2px solid #3f3f46; padding-left: 1rem; margin-left: 0; color: #a1a1aa; font-style: italic; }
+        
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Footnote styling */
+        sup button { text-decoration: none; margin-left: 2px; opacity: 0.8; transition: opacity 0.2s; }
+        sup button:hover { opacity: 1; text-decoration: underline; }
+        .footnote-back { text-decoration: none; margin-left: 0.5em; cursor: pointer; }
+
+        /* --- MODE STYLES --- */
+
+        /* Clown Mode Animations */
+        @keyframes blink { 
+            0%, 100% { opacity: 1; text-shadow: 0 0 5px rgba(255,255,255,0.8); } 
+            50% { opacity: 0.3; text-shadow: none; } 
+        }
+        .blink-1g { animation: blink 3s linear infinite; color: #fff; font-weight: 800; }
+        .blink-2g { animation: blink 2.5s linear infinite; color: #fff; font-weight: 800; }
+        .blink-3g { animation: blink 2s linear infinite; color: #fff; font-weight: 800; }
+        .blink-4g { animation: blink 1.5s linear infinite; color: #fff; font-weight: 800; }
+        .blink-5g { animation: blink 1s linear infinite; color: #fff; font-weight: 800; }
+        .blink-6g { animation: blink 0.2s linear infinite; color: #fff; }
+        .font-metal { font-family: 'Metal Mania', cursive; }
+
+        /* Heatmap Mode */
+        .heat-1 { color: #a5f3fc; } /* Cyan 200 - Short */
+        .heat-2 { color: #22d3ee; } /* Cyan 400 */
+        .heat-3 { color: #fde047; } /* Yellow 300 */
+        .heat-4 { color: #fb923c; } /* Orange 400 */
+        .heat-5 { color: #ef4444; font-weight: bold; } /* Red 500 - Long */
+
+        /* Chaos Mode */
+        .chaos-word { display: inline-block; transition: transform 0.1s; }
+
+        /* UI Controls */
+        .view-btn { filter: grayscale(100%); opacity: 0.5; transition: all 0.2s; }
+        .view-btn:hover { opacity: 0.8; }
+        .view-btn.active { background-color: rgba(255, 255, 255, 0.2); opacity: 1; filter: grayscale(0%); color: white; }
+        .grayscale-icon { filter: grayscale(100%); }
+    </style>
+</head>
+<body class="bg-black text-gray-400 font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- Minimal Header -->
+    <header class="w-full max-w-2xl mx-auto py-12 px-6 flex justify-between items-end border-b border-white/10 mb-8">
+        <div>
+            <div class="flex items-center gap-4">
+                <h1 onclick="app.renderHome()" class="text-2xl font-bold text-white cursor-pointer tracking-tight hover:text-gray-200 transition-colors">
+                    stop6G<span class="text-gray-600">texts</span>.
+                </h1>
+            </div>
+            <p class="text-xs text-gray-600 mt-2 font-mono">ENJOY THE FIGHT</p>
+        </div>
+        <!-- No Menu, No Local Button -->
+    </header>
+
+    <!-- Main Content Area -->
+    <main id="app" class="w-full max-w-2xl mx-auto px-6 flex-grow pb-20">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Simple Footer -->
+    <footer class="w-full text-center py-8 border-t border-white/10 mt-auto">
+        <p class="text-[10px] text-gray-700 font-mono uppercase tracking-widest">
+            © 2024 Monologue Theme • <span id="connection-status">Initializing...</span>
+        </p>
+    </footer>
+
+    <script>
+        // --- CONFIGURATION ---
+        const CONFIG = {
+            owner: 'stop6G',
+            repo: '6G-TEXTS',
+            path: '', // Root of the repo
+            branch: 'main'
+        };
+
+        // --- Application Logic ---
+        const app = {
+            container: document.getElementById('app'),
+            statusEl: document.getElementById('connection-status'),
+            postsCache: [], 
+            contentCache: {}, 
+            viewMode: 'normal', 
+            currentPostPath: null, 
+            
+            // Speed Reader State
+            speedInterval: null,
+            speedWords: [],
+            speedIndex: 0,
+
+            async init() {
+                this.updateStatus("Connecting to GitHub...");
+                
+                window.onpopstate = (event) => {
+                    if (event.state && event.state.path) {
+                        this.renderPost(event.state.path, false);
+                    } else {
+                        this.renderHome(false);
+                    }
+                };
+
+                await this.loadPostsIndex();
+                this.renderHome(false); 
+            },
+
+            updateStatus(msg) {
+                this.statusEl.textContent = msg;
+            },
+
+            toggleView(mode) {
+                if (this.viewMode === mode) return;
+                this.viewMode = mode;
+                
+                if (this.currentPostPath) {
+                    this.renderPost(this.currentPostPath, false); 
+                }
+            },
+
+            stopSpeedReader() {
+                if (this.speedInterval) {
+                    clearInterval(this.speedInterval);
+                    this.speedInterval = null;
+                }
+            },
+
+            // --- NAVIGATION HELPERS ---
+            scrollToId(id) {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    el.classList.remove('highlight-target');
+                    void el.offsetWidth; // trigger reflow
+                    el.classList.add('highlight-target');
+                }
+            },
+
+            // --- MARKDOWN PARSER ---
+            parseMarkdown(text) {
+                // Headers
+                text = text.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+                text = text.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+                text = text.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+                
+                // Blockquotes
+                text = text.replace(/^> (.*$)/gim, '<blockquote>$1</blockquote>');
+                
+                // Bold & Italic
+                text = text.replace(/\*\*(.*?)\*\*/gim, '<b>$1</b>');
+                text = text.replace(/\*(.*?)\*/gim, '<i>$1</i>');
+
+                // Links [text](url) - Added support for clickable links in footnotes
+                text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" class="text-gray-300 underline decoration-dotted hover:text-white transition-colors">$1</a>');
+                
+                return text;
+            },
+
+            async loadPostsIndex() {
+                try {
+                    // Handle root path or subfolder
+                    const pathSegment = CONFIG.path ? `/${CONFIG.path}` : '';
+                    const response = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents${pathSegment}`);
+                    
+                    if (!response.ok) throw new Error("GitHub API Error: " + response.statusText);
+                    const data = await response.json();
+                    
+                    if (!Array.isArray(data)) throw new Error("Invalid response format");
+
+                    // Filter for .txt files
+                    this.postsCache = data.filter(file => file.name.endsWith('.txt'));
+                    
+                    // PRE-FETCH TITLES & METADATA: Fetch content for title and commits for date
+                    this.updateStatus("Fetching metadata...");
+                    
+                    await Promise.all(this.postsCache.map(async (file) => {
+                        // 1. Fetch Title (from raw text content)
+                        try {
+                            const rawUrl = file.download_url || `https://raw.githubusercontent.com/${CONFIG.owner}/${CONFIG.repo}/${CONFIG.branch}/${file.path}`;
+                            const res = await fetch(rawUrl);
+                            if (res.ok) {
+                                const text = await res.text();
+                                const firstLine = text.split('\n')[0].trim();
+                                const cleanTitle = firstLine.replace(/^#+\s*/, '').replace(/\*\*/g, '').replace(/\*/g, '');
+                                file.title = cleanTitle || file.name.replace('.txt', '');
+                            } else {
+                                file.title = file.name.replace('.txt', '');
+                            }
+                        } catch (err) {
+                            file.title = file.name.replace('.txt', '');
+                        }
+
+                        // 2. Fetch Revision & Date (from Commits API)
+                        try {
+                            const commitUrl = `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/commits?path=${file.path}&per_page=1`;
+                            const commitRes = await fetch(commitUrl);
+                            if (commitRes.ok) {
+                                const commits = await commitRes.json();
+                                if (commits.length > 0) {
+                                    file.rev = commits[0].sha.substring(0, 7);
+                                    file.date = new Date(commits[0].commit.author.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                                }
+                            }
+                        } catch (err) {
+                            console.warn("Failed to fetch commits for " + file.name);
+                        }
+                        
+                        // Set defaults if API failed or hit limits
+                        if (!file.rev) file.rev = file.sha ? file.sha.substring(0, 7) : '????';
+                        if (!file.date) file.date = 'Unknown Date';
+                    }));
+
+                    this.updateStatus("Connected to GitHub");
+                } catch (e) {
+                    console.error("Failed to load posts", e);
+                    this.updateStatus("Connection Failed");
+                    this.container.innerHTML = `
+                        <div class="text-red-500 font-mono p-4 border border-red-900 rounded bg-red-900/10">
+                            <h3 class="font-bold">Error: Could not connect to GitHub repository.</h3>
+                            <p class="text-sm mt-2">Checking: github.com/${CONFIG.owner}/${CONFIG.repo}</p>
+                            <pre class="text-xs mt-4 text-gray-500">${e.message}</pre>
+                        </div>`;
+                }
+            },
+
+            async fetchPostData(path) {
+                if (this.contentCache[path]) return this.contentCache[path];
+
+                let content, commits;
+
+                try {
+                    // Fetch Raw Content
+                    const contentRes = await fetch(`https://raw.githubusercontent.com/${CONFIG.owner}/${CONFIG.repo}/${CONFIG.branch}/${path}`);
+                    if (!contentRes.ok) throw new Error("Failed to fetch post content");
+                    content = await contentRes.text();
+
+                    // Fetch Commit History (for revision info)
+                    const commitRes = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/commits?path=${path}&per_page=1`);
+                    commits = await commitRes.json();
+                } catch (e) {
+                    console.error("Fetch error", e);
+                    throw e;
+                }
+
+                const lines = content.split('\n');
+                let title = lines[0].replace(/^#\s+/, '');
+                title = title.replace(/^###\s+/, '').replace(/\*\*/g, '');
+
+                const body = lines.slice(1).join('\n').trim();
+                
+                const latestCommit = Array.isArray(commits) && commits.length > 0 ? commits[0] : { sha: '????', commit: { author: { date: new Date().toISOString() } } };
+                
+                const revision = {
+                    sha: latestCommit.sha.substring(0, 7),
+                    date: new Date(latestCommit.commit.author.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+                };
+                
+                const data = { title, body, revision, rawPath: path };
+                this.contentCache[path] = data;
+                return data;
+            },
+
+            renderHome(pushState = true) {
+                this.stopSpeedReader();
+                this.currentPostPath = null;
+                if (pushState) history.pushState({ page: 'home' }, '', '#');
+                window.scrollTo(0, 0);
+                
+                if (this.postsCache.length === 0) {
+                    if (!this.container.innerHTML.includes("Error")) {
+                        this.container.innerHTML = `<div class="flex justify-center py-20"><div class="spinner"></div></div>`;
+                    }
+                    return;
+                }
+
+                const postsHtml = this.postsCache.map((file, index) => {
+                    const displayName = file.title || file.name.replace('.txt', '').replace(/-/g, ' ');
+                    const indexStr = String(index + 1).padStart(3, '0');
+                    return `
+                    <article class="group mb-8 cursor-pointer border-b border-white/5 pb-8 last:border-0" onclick="app.renderPost('${file.path}')">
+                        <div class="flex items-baseline justify-between mb-2">
+                            <span class="text-xs font-mono text-gray-600">.txt</span>
+                            <span class="text-xs font-mono text-gray-700 opacity-0 group-hover:opacity-100 transition-opacity">Read →</span>
+                        </div>
+                        <h2 class="text-xl font-semibold text-gray-200 group-hover:text-white transition-colors capitalize mb-2">
+                            ${indexStr} - ${displayName}
+                        </h2>
+                        <div class="flex items-center gap-3 text-[10px] font-mono text-gray-500 uppercase tracking-widest">
+                            <span class="bg-white/5 px-2 py-1 rounded text-gray-400">REV: ${file.rev}</span>
+                            <span>UPDATED: ${file.date}</span>
+                        </div>
+                    </article>
+                `}).join('');
+                this.container.innerHTML = `<div class="fade-in">${postsHtml}</div>`;
+            },
+
+            async renderPost(path, pushState = true) {
+                this.stopSpeedReader();
+                
+                this.currentPostPath = path;
+                if (pushState) history.pushState({ path: path }, '', `#${path}`);
+                window.scrollTo(0, 0);
+
+                // Loading State
+                this.container.innerHTML = `<div class="text-gray-500 font-mono animate-pulse mt-12">Fetching from GitHub...</div>`;
+
+                try {
+                    const post = await this.fetchPostData(path);
+                    
+                    const bodyLinesRaw = post.body.split('\n');
+                    
+                    const bodyLines = [];
+                    const footnotes = {};
+                    const footnoteDefRegex = /^\[(\d+)\]\s+(.*)$/;
+                    
+                    let currentFootnoteId = null;
+
+                    bodyLinesRaw.forEach(line => {
+                        const match = line.match(footnoteDefRegex);
+                        if (match) {
+                            currentFootnoteId = match[1];
+                            footnotes[currentFootnoteId] = match[2];
+                        } else if (currentFootnoteId && line.trim().length > 0) {
+                            // Continuation of previous footnote (multi-line footnote support)
+                            footnotes[currentFootnoteId] += " " + line.trim();
+                        } else if (currentFootnoteId && line.trim().length === 0) {
+                            // Empty line separates footnotes, stop continuation
+                            currentFootnoteId = null;
+                        } else {
+                            // Standard body line
+                            bodyLines.push(line); 
+                        }
+                    });
+
+                    // Controls Rendering
+                    const controls = `
+                        <div class="flex flex-col items-end">
+                            <div class="flex items-center border border-white/20 rounded mb-2 flex-wrap bg-black z-10">
+                                <button onclick="app.toggleView('normal')" class="view-btn grayscale-icon px-3 py-1 text-base border-r border-white/10 ${this.viewMode === 'normal' ? 'active' : ''}" title="Normal">👓</button>
+                                <button onclick="app.toggleView('clown')" class="view-btn grayscale-icon px-3 py-1 text-base border-r border-white/10 ${this.viewMode === 'clown' ? 'active' : ''}" title="Clown">🤡</button>
+                                <button onclick="app.toggleView('speed')" class="view-btn grayscale-icon px-3 py-1 text-base border-r border-white/10 ${this.viewMode === 'speed' ? 'active' : ''}" title="Speed Reader">⚡</button>
+                                <button onclick="app.toggleView('heatmap')" class="view-btn grayscale-icon px-3 py-1 text-base ${this.viewMode === 'heatmap' ? 'active' : ''}" title="Heatmap">🔥</button>
+                            </div>
+                        </div>`;
+
+                    // Handle Speed Reader
+                    if (this.viewMode === 'speed') {
+                        const fullText = bodyLines.join(' ');
+                        const cleanText = fullText.replace(/\[\d+\]/g, '').replace(/[^\w\s\.\,\!\?]/g, ''); 
+                        this.speedWords = cleanText.split(/\s+/).filter(w => w.length > 0);
+                        this.speedIndex = 0;
+
+                        const html = `
+                            <div class="fade-in">
+                                <div class="flex items-start justify-between mb-8">
+                                    <button onclick="app.renderHome()" class="text-xs font-mono text-gray-500 hover:text-white transition-colors flex items-center gap-2 group mt-2"><span class="group-hover:-translate-x-1 transition-transform">←</span> BACK TO INDEX</button>
+                                    ${controls}
+                                </div>
+                                <header class="mb-10 pb-6 border-b border-white/10"><h1 class="text-3xl font-bold text-white">${post.title}</h1></header>
+                                
+                                <div class="flex flex-col items-center justify-center h-64 border border-white/10 rounded-lg bg-white/5 relative">
+                                    <div id="speed-display" class="text-5xl font-mono text-white font-bold">READY</div>
+                                    <div class="mt-8 flex gap-4">
+                                        <button onclick="app.runSpeedReader()" class="px-4 py-2 bg-white text-black font-bold rounded hover:bg-gray-200">PLAY</button>
+                                        <button onclick="app.stopSpeedReader()" class="px-4 py-2 border border-white text-white rounded hover:bg-white/10">PAUSE</button>
+                                        <button onclick="app.resetSpeedReader()" class="px-4 py-2 border border-white text-white rounded hover:bg-white/10">RESET</button>
+                                    </div>
+                                    <div class="absolute bottom-4 text-xs font-mono text-gray-500">
+                                        <span id="speed-progress">0</span> / ${this.speedWords.length}
+                                    </div>
+                                </div>
+                            </div>`;
+                        this.container.innerHTML = html;
+                        return;
+                    }
+
+                    // --- CONTENT PROCESSING FOR TEXT MODES ---
+                    let processedBody;
+                    let containerClass = "";
+
+                    if (this.viewMode === 'clown') {
+                        processedBody = bodyLines.map(line => {
+                            if (!line.trim()) return ""; 
+                            const protectedLine = line.replace(/(\[\d+\])/g, "___PROTECTED___");
+                            let doc = nlp(protectedLine);
+                            let matches = [
+                                ...Array.from(protectedLine.matchAll(/\b([1-6])G\b/g)).map(m => ({ offset: { start: m.index, length: m[0].length }, type: 'gen', level: m[1], priority: 6 })),
+                                ...doc.numbers().json({offset:true}).map(m=>({...m, type:'num', priority:5})),
+                                ...doc.acronyms().json({offset:true}).map(m=>({...m, type:'acr', priority:3})),
+                                ...doc.match('#Adjective').not('#Acronym').json({offset:true}).map(m=>({...m, type:'adj', priority:2})),
+                                ...doc.match('#Verb').not('#Acronym').json({offset:true}).map(m=>({...m, type:'verb', priority:1.5})),
+                                ...doc.match('(the|a|an)').not('#Acronym').json({offset:true}).map(m=>({...m, type:'det', priority:0.5})), 
+                                ...doc.match('#Noun').not('#Acronym').not('#Adjective').not('#Pronoun').json({offset:true}).map(m=>({...m, type:'noun', priority:1}))
+                            ]
+                            .filter(m => m && m.offset && typeof m.offset.start === 'number')
+                            .sort((a,b) => b.priority - a.priority);
+
+                            let chars = protectedLine.split('');
+                            let mask = new Array(chars.length).fill(false);
+
+                            matches.forEach(m => {
+                                let start = m.offset.start; 
+                                let len = m.offset.length;
+                                for(let i=start; i<start+len; i++) if(mask[i]) return;
+                                
+                                let text = protectedLine.substring(start, start+len);
+                                let cls = "";
+                                if (m.type === 'det') {
+                                    const rot = Math.random() * 30 - 15;
+                                    const y = Math.random() * 10 - 5;
+                                    chars[start] = `<span class="chaos-word" style="transform: rotate(${rot}deg) translateY(${y}px)">${text}</span>`;
+                                } else {
+                                    if (m.type === 'gen') {
+                                        cls = m.level === '6' ? 'blink-6g font-metal text-4xl md:text-5xl' : `blink-${m.level}g`;
+                                    } else if (m.type === 'num') {
+                                        cls = 'text-2xl md:text-3xl font-black text-white';
+                                    } else if (m.type === 'acr') {
+                                        cls = 'text-xl md:text-2xl font-bold text-white tracking-widest';
+                                    } else if (m.type === 'adj') {
+                                        cls = 'bg-white text-black font-medium px-0.5 rounded-sm mx-0.5';
+                                    } else if (m.type === 'verb') {
+                                        text = text.split('').map(c => {
+                                            const colors = ['text-red-400', 'text-orange-400', 'text-yellow-300', 'text-lime-400', 'text-emerald-400', 'text-cyan-400', 'text-blue-400', 'text-violet-400', 'text-fuchsia-400', 'text-rose-400'];
+                                            const color = colors[Math.floor(Math.random() * colors.length)];
+                                            return `<span class="${color}">${c}</span>`;
+                                        }).join('');
+                                    } else {
+                                        cls = 'text-lg md:text-xl font-semibold text-gray-100';
+                                    }
+                                    
+                                    chars[start] = `<span class="${cls}">${text}</span>`;
+                                }
+
+                                for(let i=start+1; i<start+len; i++) chars[i] = "";
+                                for(let i=start; i<start+len; i++) mask[i] = true;
+                            });
+                            
+                            return chars.join('').replace(/___PROTECTED___/g, (match, offset, str) => {
+                                return `[1]`; 
+                            });
+                        }).join('\n');
+
+                    } else if (this.viewMode === 'heatmap') {
+                        processedBody = bodyLines.map(line => {
+                            if (!line) return "";
+                            return line.split(' ').map(w => {
+                                const cleanLen = w.replace(/[^a-zA-Z]/g, '').length;
+                                let cls = "";
+                                if (cleanLen <= 3) cls = "heat-1";
+                                else if (cleanLen <= 5) cls = "heat-2";
+                                else if (cleanLen <= 7) cls = "heat-3";
+                                else if (cleanLen <= 9) cls = "heat-4";
+                                else cls = "heat-5";
+                                return `<span class="${cls}">${w}</span>`;
+                            }).join(' ');
+                        }).join('\n');
+
+                    } else {
+                        // Normal
+                        processedBody = bodyLines.join('\n');
+                    }
+
+                    // Markdown & Footnotes
+                    processedBody = processedBody.replace(/\[(\d+)\]/g, (match, id) => {
+                        if (footnotes[id]) {
+                            // Using button + onclick allows smooth JS scrolling without hash navigation URL changes
+                            return `<sup id="ref-${id}"><button onclick="app.scrollToId('fn-${id}')" class="text-blue-400 hover:text-blue-300 transition-colors cursor-pointer hover:underline">[${id}]</button></sup>`;
+                        }
+                        return match;
+                    });
+
+                    const formattedBody = processedBody.split('\n').map(line => {
+                        if (!line.trim()) return "";
+                        return this.parseMarkdown(line);
+                    }).map(p => {
+                        if (p.startsWith('<h') || p.startsWith('<blockquote')) return p;
+                        return `<p>${p}</p>`;
+                    }).join('');
+
+                    let footnotesHtml = '';
+                    const footnoteIds = Object.keys(footnotes).sort((a,b) => a - b);
+                    if (footnoteIds.length > 0) {
+                        footnotesHtml = `<div class="mt-16 pt-8 border-t border-white/10"><ul class="space-y-3">${footnoteIds.map(id => `<li id="fn-${id}" class="text-sm text-gray-500 flex gap-3"><button onclick="app.scrollToId('ref-${id}')" class="font-mono text-blue-400 hover:text-white transition-colors shrink-0" title="Back to text">[${id}]</button><span>${this.parseMarkdown(footnotes[id])}</span></li>`).join('')}</ul></div>`;
+                    }
+
+                    const html = `
+                        <div class="fade-in">
+                            <div class="flex items-start justify-between mb-8">
+                                <button onclick="app.renderHome()" class="text-xs font-mono text-gray-500 hover:text-white transition-colors flex items-center gap-2 group mt-2"><span class="group-hover:-translate-x-1 transition-transform">←</span> BACK TO INDEX</button>
+                                ${controls}
+                            </div>
+                            
+                            <header class="mb-10 pb-6 border-b border-white/10">
+                                <div class="flex items-center gap-3 text-[10px] font-mono text-gray-500 mb-4 uppercase tracking-widest">
+                                    <span class="bg-white/5 px-2 py-1 rounded text-gray-400">REV: ${post.revision.sha}</span>
+                                    <span>UPDATED: ${post.revision.date}</span>
+                                </div>
+                                <h1 class="text-3xl md:text-4xl font-bold text-white tracking-tight leading-tight">${post.title}</h1>
+                            </header>
+                            
+                            <article class="prose prose-invert prose-neutral max-w-none text-gray-400 ${containerClass}">
+                                ${formattedBody}
+                            </article>
+                            ${footnotesHtml}
+                            <div class="mt-16 pt-6 border-t border-white/10 flex justify-between items-center text-xs font-mono text-gray-600">
+                                <div>Source: <a href="https://github.com/${CONFIG.owner}/${CONFIG.repo}/blob/${CONFIG.branch}/${path}" target="_blank" class="hover:text-white underline decoration-dotted">View on GitHub</a></div>
+                            </div>
+                        </div>`;
+                    this.container.innerHTML = html;
+                } catch (e) {
+                    console.error(e);
+                    this.container.innerHTML = `<div class="text-red-500 py-10">Error reading post from GitHub.</div>`;
+                }
+            },
+
+            // Speed Reader Helpers
+            runSpeedReader() {
+                if (this.speedInterval) return;
+                const display = document.getElementById('speed-display');
+                const progress = document.getElementById('speed-progress');
+                this.speedInterval = setInterval(() => {
+                    if (this.speedIndex >= this.speedWords.length) {
+                        this.stopSpeedReader();
+                        display.innerText = "DONE";
+                        return;
+                    }
+                    display.innerText = this.speedWords[this.speedIndex];
+                    progress.innerText = this.speedIndex + 1;
+                    this.speedIndex++;
+                }, 250); // 240 WPM roughly
+            },
+            resetSpeedReader() {
+                this.stopSpeedReader();
+                this.speedIndex = 0;
+                document.getElementById('speed-display').innerText = "READY";
+                document.getElementById('speed-progress').innerText = "0";
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => app.init());
+    </script>
+</body>
+</html>
