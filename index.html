@@ -107,7 +107,7 @@
     <!-- Simple Footer -->
     <footer class="w-full text-center py-8 border-t border-white/10 mt-auto">
         <p class="text-[10px] text-gray-700 font-mono uppercase tracking-widest">
-            © 2024 Monologue Theme • <span id="connection-status">Initializing...</span>
+            Brussels 2026 - stop6g.eu
         </p>
     </footer>
 
@@ -123,7 +123,7 @@
         // --- Application Logic ---
         const app = {
             container: document.getElementById('app'),
-            statusEl: document.getElementById('connection-status'),
+            statusEl: null, // Removed status element from footer
             postsCache: [], 
             contentCache: {}, 
             viewMode: 'normal', 
@@ -150,7 +150,8 @@
             },
 
             updateStatus(msg) {
-                this.statusEl.textContent = msg;
+                // No-op or console log since footer element is removed
+                console.log("Status:", msg);
             },
 
             toggleView(mode) {
