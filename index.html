@@ -58,11 +58,27 @@
         /* Chaos Mode */
         .chaos-word { display: inline-block; transition: transform 0.1s; }
 
-        /* UI Controls */
-        .view-btn { filter: grayscale(100%); opacity: 0.5; transition: all 0.2s; }
-        .view-btn:hover { opacity: 0.8; }
-        .view-btn.active { background-color: rgba(255, 255, 255, 0.2); opacity: 1; filter: grayscale(0%); color: white; }
-        .grayscale-icon { filter: grayscale(100%); }
+        /* UI Controls - Updated for discretion */
+        .view-btn { 
+            background-color: white; 
+            color: black; 
+            font-family: monospace; 
+            font-size: 0.6rem; /* Significantly smaller font */
+            padding: 2px 5px; /* Minimal padding */
+            border: 1px solid white;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: lowercase;
+            opacity: 0.5; /* Discrete when inactive */
+        }
+        .view-btn:hover { opacity: 1; }
+        .view-btn.active { 
+            background-color: black; 
+            color: white; 
+            border: 1px solid white;
+            opacity: 1;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body class="bg-black text-gray-400 font-sans antialiased min-h-screen flex flex-col">
@@ -77,7 +93,6 @@
             </div>
             <p class="text-xs text-gray-600 mt-2 font-mono">ENJOY THE FIGHT</p>
         </div>
-        <!-- No Menu, No Local Button -->
     </header>
 
     <!-- Main Content Area -->
@@ -195,11 +210,11 @@
                     // Filter for .txt files
                     this.postsCache = data.filter(file => file.name.endsWith('.txt'));
                     
-                    // PRE-FETCH TITLES & METADATA: Fetch content for title and commits for date
+                    // PRE-FETCH TITLES & METADATA
                     this.updateStatus("Fetching metadata...");
                     
                     await Promise.all(this.postsCache.map(async (file) => {
-                        // 1. Fetch Title (from raw text content)
+                        // 1. Fetch Title
                         try {
                             const rawUrl = file.download_url || `https://raw.githubusercontent.com/${CONFIG.owner}/${CONFIG.repo}/${CONFIG.branch}/${file.path}`;
                             const res = await fetch(rawUrl);
@@ -215,7 +230,7 @@
                             file.title = file.name.replace('.txt', '');
                         }
 
-                        // 2. Fetch Revision & Date (from Commits API)
+                        // 2. Fetch Revision & Date
                         try {
                             const commitUrl = `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/commits?path=${file.path}&per_page=1`;
                             const commitRes = await fetch(commitUrl);
@@ -230,7 +245,6 @@
                             console.warn("Failed to fetch commits for " + file.name);
                         }
                         
-                        // Set defaults if API failed or hit limits
                         if (!file.rev) file.rev = file.sha ? file.sha.substring(0, 7) : '????';
                         if (!file.date) file.date = 'Unknown Date';
                     }));
@@ -360,11 +374,11 @@
                     // Controls Rendering
                     const controls = `
                         <div class="flex flex-col items-end">
-                            <div class="flex items-center border border-white/20 rounded mb-2 flex-wrap bg-black z-10">
-                                <button onclick="app.toggleView('normal')" class="view-btn grayscale-icon px-3 py-1 text-base border-r border-white/10 ${this.viewMode === 'normal' ? 'active' : ''}" title="Normal">👓</button>
-                                <button onclick="app.toggleView('clown')" class="view-btn grayscale-icon px-3 py-1 text-base border-r border-white/10 ${this.viewMode === 'clown' ? 'active' : ''}" title="Clown">🤡</button>
-                                <button onclick="app.toggleView('speed')" class="view-btn grayscale-icon px-3 py-1 text-base border-r border-white/10 ${this.viewMode === 'speed' ? 'active' : ''}" title="Speed Reader">⚡</button>
-                                <button onclick="app.toggleView('heatmap')" class="view-btn grayscale-icon px-3 py-1 text-base ${this.viewMode === 'heatmap' ? 'active' : ''}" title="Heatmap">🔥</button>
+                            <div class="flex items-center mb-2 flex-wrap z-10 gap-1">
+                                <button onclick="app.toggleView('normal')" class="view-btn ${this.viewMode === 'normal' ? 'active' : ''}">normal</button>
+                                <button onclick="app.toggleView('clown')" class="view-btn ${this.viewMode === 'clown' ? 'active' : ''}">clown</button>
+                                <button onclick="app.toggleView('speed')" class="view-btn ${this.viewMode === 'speed' ? 'active' : ''}">lightning</button>
+                                <button onclick="app.toggleView('heatmap')" class="view-btn ${this.viewMode === 'heatmap' ? 'active' : ''}">heatmap</button>
                             </div>
                         </div>`;
 
@@ -505,7 +519,6 @@
                     let footnotesHtml = '';
                     const footnoteIds = Object.keys(footnotes).sort((a,b) => a - b);
                     if (footnoteIds.length > 0) {
-                        // REMOVED THE BACK ARROW (↩) BUTTON HERE
                         footnotesHtml = `<div class="mt-16 pt-8 border-t border-white/10"><ul class="space-y-3">${footnoteIds.map(id => `<li id="fn-${id}" class="text-sm text-gray-500 flex gap-3"><button onclick="app.scrollToId('ref-${id}')" class="font-mono text-pink-500 hover:text-white transition-colors shrink-0" title="Back to text">[${id}]</button><span>${this.parseMarkdown(footnotes[id])}</span></li>`).join('')}</ul></div>`;
                     }
 
