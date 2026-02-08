@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minimal Blog</title>
+    <title>stop6g.eu - texts</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- NLP Library: Compromise.js -->
     <script src="https://unpkg.com/compromise"></script>
@@ -327,15 +327,7 @@
                 window.scrollTo(0, 0);
 
                 // Loading State
-                this.container.innerHTML = `<div class="animate-pulse space-y-4 max-w-4xl mt-12">
-                        <div class="h-8 bg-white/10 rounded w-3/4"></div>
-                        <div class="h-4 bg-white/5 rounded w-1/4 mb-12"></div>
-                        <div class="space-y-3">
-                            <div class="h-4 bg-white/5 rounded"></div>
-                            <div class="h-4 bg-white/5 rounded"></div>
-                            <div class="h-4 bg-white/5 rounded w-5/6"></div>
-                        </div>
-                    </div>`;
+                this.container.innerHTML = `<div class="text-gray-500 font-mono animate-pulse mt-12">Fetching from GitHub...</div>`;
 
                 try {
                     const post = await this.fetchPostData(path);
@@ -497,7 +489,7 @@
                     processedBody = processedBody.replace(/\[(\d+)\]/g, (match, id) => {
                         if (footnotes[id]) {
                             // Using button + onclick allows smooth JS scrolling without hash navigation URL changes
-                            return `<sup id="ref-${id}"><button onclick="app.scrollToId('fn-${id}')" class="text-blue-400 hover:text-blue-300 transition-colors cursor-pointer hover:underline">[${id}]</button></sup>`;
+                            return `<sup id="ref-${id}"><button onclick="app.scrollToId('fn-${id}')" class="text-pink-500 hover:text-pink-400 transition-colors cursor-pointer hover:underline">[${id}]</button></sup>`;
                         }
                         return match;
                     });
@@ -513,7 +505,8 @@
                     let footnotesHtml = '';
                     const footnoteIds = Object.keys(footnotes).sort((a,b) => a - b);
                     if (footnoteIds.length > 0) {
-                        footnotesHtml = `<div class="mt-16 pt-8 border-t border-white/10"><ul class="space-y-3">${footnoteIds.map(id => `<li id="fn-${id}" class="text-sm text-gray-500 flex gap-3"><button onclick="app.scrollToId('ref-${id}')" class="font-mono text-blue-400 hover:text-white transition-colors shrink-0" title="Back to text">[${id}]</button><span>${this.parseMarkdown(footnotes[id])} <button onclick="app.scrollToId('ref-${id}')" class="footnote-back text-gray-600 hover:text-white" title="Back to text">↩</button></span></li>`).join('')}</ul></div>`;
+                        // REMOVED THE BACK ARROW (↩) BUTTON HERE
+                        footnotesHtml = `<div class="mt-16 pt-8 border-t border-white/10"><ul class="space-y-3">${footnoteIds.map(id => `<li id="fn-${id}" class="text-sm text-gray-500 flex gap-3"><button onclick="app.scrollToId('ref-${id}')" class="font-mono text-pink-500 hover:text-white transition-colors shrink-0" title="Back to text">[${id}]</button><span>${this.parseMarkdown(footnotes[id])}</span></li>`).join('')}</ul></div>`;
                     }
 
                     const html = `
