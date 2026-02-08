@@ -1,0 +1,81 @@
+### **ZERO TRUST**
+
+OK, let's admit it... **"Never Trust, Always Verify"** actually sounds very good. It sounds safe.
+
+Technically, it is the foundational slogan of the entire **Zero Trust** [36] doctrine. It was originated by **Forrester Research** [37], consecrated by the **US NIST** (National Institute of Standards and Technology) [38], and finally adopted by the European **xTrust-6G** project as their **Core Design Principle** [39].
+
+But... we better slow down and start from the beginning.
+
+To understand WTF **Zero Trust Architecture (ZTA)** is and why it is a nightmare, we must understand the old models first.
+
+In the era of 3G and 4G, security was based on the **"Perimeter Model"** (often called the "Castle and Moat") [40]. You typed your password once, you entered the network (firewall/login), and you were trusted. You could roam freely inside.
+
+**5G** moved to a hybrid system named **"Network Slicing"** [41]. This is the idea: your SIM card allows you to enter *only* the parts of the network that belong to, let's say, **"Slice #303."** You are segregated. Operators isolate users into specific "slices" with different rules and permissions.
+
+In 2010, **John Kindervag**, a principal analyst at Forrester Research, looked at these models and said: *"Puagh!"* He proposed a radical solution: **"Trust is a vulnerability. We need to eliminate trust."**
+He called it **Zero Trust** [37].
+
+In this new model, there is no "inside." The network treats **everyone** as a hostile threat.
+It checks you every single time you try to move... and you must prove that you are still... **YOU.**
+
+For ten years, this was just a corporate theory for IT departments. But in **2020**, the **US Government (NIST)** turned this theory into a **Federal Standard** [38]. They wrote the "bible" of Zero Trust (SP 800-207), effectively mandating that this paranoia become the default architecture for the entire digital world.
+
+And now, with **xTrust-6G** [39], the European Union is building this logic directly into the 6G mobile network.
+
+But 5G still has a "fatal flaw" for the surveillance state: **It is blind.**
+It trusts the *Device* (the phone), not the *User* (the human). It cannot see *you*. If I steal your unlocked 5G phone, the network trusts me completely because I am holding the authorized object.
+
+**6G** closes this gap.
+The core principle of Zero Trust 6G is that **Identity is not a token; it is a performance.**
+It is not enough to *have* the phone. You must *be* the user. The network uses the ISAC layer (see *Section 001*) to continuously verify your biological reality. This is done with **"Continuous Authentication"** [42] via **Behavioral Biometrics**.
+
+The network builds a **"Trust Score"** [43] for you in real-time based on:
+
+**Your Gait:** The rhythm of your walk (detected by ISAC radar).
+**Your Biology:** Your heartbeat and breathing patterns.
+**Your Behavior:** The way you hold your phone, your typing speed, and your location history [44].
+
+If your "Trust Score" drops (you walk strangely because you are injured, or the algorithm flags a "conflict" in a crowd), the network instantly revokes your access. You don't get a trial. You don't get a phone call. The algorithm simply decides you are no longer "You."
+
+This shifts the burden of proof. In a free society, the state must prove you are guilty to search you. In a Zero Trust 6G society, **you must continuously prove you are innocent to be connected.** You are no longer a citizen with rights; you are a **"Permanent Suspect"** under digital parole, where the check-in officer is an AI that never sleeps.
+
+Eh! No sci-fi here... look at **xTrust-6G**.
+Launched in **January 2025** by the European Union, this massive project is currently building the **"User Behavior Policy Engines"** [45] that will power this system. Their stated goal? To establish "Zero Trust" by leveraging **"behavioral insights gathered from the 6G infrastructure."** [46]
+The cage is being welded together as we speak.
+
+---
+
+### **Notes & References**
+
+**[36] - CrowdStrike:** "What is Zero Trust Security?" *CrowdStrike Cyber Front*, 2023.
+[Link](https://www.crowdstrike.com/cybersecurity-101/zero-trust-security/)
+
+**[37] - Forrester Research:** Kindervag, John. "Build Security Into Your Network's DNA: The Zero Trust Network Architecture," *Forrester Research Inc.*, 2010.
+[Link](https://media.paloaltonetworks.com/documents/Forrester-Build-Security-Into-Your-Network.pdf)
+
+**[38] - NIST:** Rose, Scott, et al. "Zero Trust Architecture (SP 800-207)," *National Institute of Standards and Technology*, US Department of Commerce, August 2020.
+[Link](https://csrc.nist.gov/publications/detail/sp/800-207/final)
+
+**[39] - xTrust-6G:** "Resilient and privacy-preserving x-trust framework for 6G networks," *Horizon Europe Project (Grant Agreement No 101192749)*, Start Date: 01 January 2025.
+[Link](https://xtrust-6g.eu/)
+
+**[40] - Microsoft Security:** "Zero Trust Security: The Definitive Guide," *Microsoft Security Business*, 2023.
+[Link](https://www.microsoft.com/en-us/security/business/zero-trust)
+
+**[41] - GSMA:** "An Introduction to Network Slicing," *GSMA Architecture Group*, 2017.
+[Link](https://www.google.com/search?q=https://www.gsma.com/futurenetworks/technology/network-slicing/)
+
+**[42] - NGMN Alliance:** "6G Use Cases and Analysis," *Next Generation Mobile Networks Alliance*, 2022.
+[Link](https://www.google.com/search?q=https://www.ngmn.org/wp-content/uploads/220214_NGMN_6G_Use_Cases_and_Analysis.pdf)
+
+**[43] - NIST:** "SP 800-207: Zero Trust Architecture (Section 3.2: The Trust Algorithm)," *National Institute of Standards and Technology*, 2020.
+[Link](https://csrc.nist.gov/publications/detail/sp/800-207/final)
+
+**[44] - Hexa-X:** "D1.2: Expanded 6G Vision, Use Cases and Societal Values," *Hexa-X Project (EU Flagship)*, 2021.
+[Link](https://www.google.com/search?q=https://hexa-x.eu/wp-content/uploads/2021/05/Hexa-X_D1.2.pdf)
+
+**[45] - xTrust-6G:** "Project Objectives: Objective 2," *xTrust-6G Official Website*, 2025.
+[Link](https://xtrust-6g.eu/)
+
+**[46] - xTrust-6G:** "Project Objectives: Objective 1," *xTrust-6G Official Website*, 2025.
+[Link](https://xtrust-6g.eu/)
