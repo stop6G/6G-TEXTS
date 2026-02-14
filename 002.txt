@@ -8,39 +8,24 @@ But... we better slow down and start from the beginning.
 
 To understand WTF **Zero Trust Architecture (ZTA)** is and why it is a nightmare, we must understand the old models first.
 
-In the era of 3G and 4G, security was based on the **"Perimeter Model"** (often called the "Castle and Moat") [40]. You typed your password once, you entered the network (firewall/login), and you were trusted. You could roam freely inside.
-
-**5G** moved to a hybrid system named **"Network Slicing"** [41]. This is the idea: your SIM card allows you to enter *only* the parts of the network that belong to, let's say, **"Slice #303."** You are segregated. Operators isolate users into specific "slices" with different rules and permissions.
+In the era of 3G and 4G, security was based on the **"Perimeter Model"** (often called the "Castle and Moat") [40]. You typed your password once, you entered the network (firewall/login), and you were trusted. You could roam freely inside. **5G** moved to a hybrid system named **"Network Slicing"** [41]. This is the idea: your SIM card allows you to enter *only* the parts of the network that belong to, let's say, **"Slice #303."** You are segregated. Operators isolate users into specific "slices" with different rules and permissions.
 
 In 2010, **John Kindervag**, a principal analyst at Forrester Research, looked at these models and said: *"Puagh!"* He proposed a radical solution: **"Trust is a vulnerability. We need to eliminate trust."**
-He called it **Zero Trust** [37].
+He called it **Zero Trust** [37]. In this new model, there is no "inside." The network treats **everyone** as a hostile threat. It checks you every single time you try to move... and you must prove that you are still... **YOU.**
 
-In this new model, there is no "inside." The network treats **everyone** as a hostile threat.
-It checks you every single time you try to move... and you must prove that you are still... **YOU.**
-
-For ten years, this was just a corporate theory for IT departments. But in **2020**, the **US Government (NIST)** turned this theory into a **Federal Standard** [38]. They wrote the "bible" of Zero Trust (SP 800-207), effectively mandating that this paranoia become the default architecture for the entire digital world.
-
-And now, with **xTrust-6G** [39], the European Union is building this logic directly into the 6G mobile network.
+For ten years, this was just a corporate theory for IT departments. But in **2020**, the **US Government (NIST)** turned this theory into a **Federal Standard** [38]. They wrote the "bible" of Zero Trust (SP 800-207), effectively mandating that this paranoia become the default architecture for the entire digital world. And now, with **xTrust-6G** [39], the European Union is building this logic directly into the 6G mobile network.
 
 5G still has a "fatal flaw" for the surveillance state: **It is blind.** It trusts the *Device* (the phone), not the *User* (the human). It cannot see *you*. If I steal your unlocked 5G phone, the network trusts me completely because I am holding the authorized object. **6G** closes this gap. The core principle of Zero Trust 6G is that **Identity is not a token; it is a performance.** It is not enough to *have* the phone. You must *be* the user. The network uses the ISAC layer (see [001-OPT-OUT](https://stop6g.eu/#001.txt)) to continuously verify your biological reality. This is done with **"Continuous Authentication"** [42] via **Behavioral Biometrics**.
 
-The network builds a **"Trust Score"** [43] for you in real-time based on: **Your Gait:** The rhythm of your walk (detected by ISAC radar). **Your Biology:** Your heartbeat and breathing patterns. **Your Behavior:** The way you hold your phone, your typing speed, and your location history [44].
-
-If your "Trust Score" drops (you walk strangely because you are injured, or the algorithm flags a "conflict" in a crowd), the network instantly revokes your access. You don't get a trial. You don't get a phone call. The algorithm simply decides you are no longer "You."
-
-This shifts the burden of proof. In a free society, the state must prove you are guilty to search you. In a Zero Trust 6G society, **you must continuously prove you are innocent to be connected.** You are no longer a citizen with rights; you are a **"Permanent Suspect"** under digital parole, where the check-in officer is an AI that never sleeps.
+The network builds a **"Trust Score"** [43] for you in real-time based on: **Your Gait:** The rhythm of your walk (detected by ISAC radar). **Your Biology:** Your heartbeat and breathing patterns. **Your Behavior:** The way you hold your phone, your typing speed, and your location history [44]. If your "Trust Score" drops (you walk strangely because you are injured, or the algorithm flags a "conflict" in a crowd), the network instantly revokes your access. You don't get a trial. You don't get a phone call. The algorithm simply decides you are no longer "You." This shifts the burden of proof. In a free society, the state must prove you are guilty to search you. In a Zero Trust 6G society, **you must continuously prove you are innocent to be connected.** You are no longer a citizen with rights; you are a **"Permanent Suspect"** under digital parole, where the check-in officer is an AI that never sleeps.
 
 Eh! No sci-fi here... look at **xTrust-6G**.
 Launched in **January 2025** by the European Union, this massive project is currently building the **"User Behavior Policy Engines"** [45] that will power this system. Their stated goal? To establish "Zero Trust" by leveraging **"behavioral insights gathered from the 6G infrastructure."** [46]
-The cage is being welded together as we speak.
+
 
 And here is the final trap. Isn't this data private? **Ha!**
 
-We need to understand the shift: in the current world (like Apple's FaceID), biometric data is stored in a **"Secure Enclave"** on the phone's chip. It never leaves your pocket. In the 6G world, your phone is not the computer. **The Network is the computer.**
-
-To calculate your **"Trust Score"** in real-time based on your gait and heartbeat, the AI needs massive processing power. This means your biological data is not processed on your phone. It is stripped from you, uploaded to the **"Edge Cloud"** (the servers inside the cell towers) [47], and fed into the central Policy Engine.
-
-This transforms the nature of the data. It is no longer just "authentication keys"; **it is training data**. By constantly uploading your physical reactions to the cloud, the network is not just verifying who you are. It is building a high-fidelity simulation of you, a **Digital Twin** [48] that lives in their servers.
+We need to understand the shift: in the current world (like Apple's FaceID), biometric data is stored in a **"Secure Enclave"** on the phone's chip. It never leaves your pocket. In the 6G world, your phone is not the computer. **The Network is the computer.** To calculate your **"Trust Score"** in real-time based on your gait and heartbeat, the AI needs massive processing power. This means your biological data is not processed on your phone. It is stripped from you, uploaded to the **"Edge Cloud"** (the servers inside the cell towers) [47], and fed into the central Policy Engine. This transforms the nature of the data. It is no longer just "authentication keys"; **it is training data**. By constantly uploading your physical reactions to the cloud, the network is not just verifying who you are. It is building a high-fidelity simulation of you, a **Digital Twin** [48] that lives in their servers.
 
 **They are not just watching … they are cloning.**
 
