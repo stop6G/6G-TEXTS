@@ -22,12 +22,7 @@ For ten years, this was just a corporate theory for IT departments. But in **202
 
 And now, with **xTrust-6G** [39], the European Union is building this logic directly into the 6G mobile network.
 
-5G still has a "fatal flaw" for the surveillance state: **It is blind.**
-It trusts the *Device* (the phone), not the *User* (the human). It cannot see *you*. If I steal your unlocked 5G phone, the network trusts me completely because I am holding the authorized object.
-
-**6G** closes this gap.
-The core principle of Zero Trust 6G is that **Identity is not a token; it is a performance.**
-It is not enough to *have* the phone. You must *be* the user. The network uses the ISAC layer (see [001-OPT-OUT](https://stop6g.eu/#001.txt)) to continuously verify your biological reality. This is done with **"Continuous Authentication"** [42] via **Behavioral Biometrics**.
+5G still has a "fatal flaw" for the surveillance state: **It is blind.** It trusts the *Device* (the phone), not the *User* (the human). It cannot see *you*. If I steal your unlocked 5G phone, the network trusts me completely because I am holding the authorized object. **6G** closes this gap. The core principle of Zero Trust 6G is that **Identity is not a token; it is a performance.** It is not enough to *have* the phone. You must *be* the user. The network uses the ISAC layer (see [001-OPT-OUT](https://stop6g.eu/#001.txt)) to continuously verify your biological reality. This is done with **"Continuous Authentication"** [42] via **Behavioral Biometrics**.
 
 The network builds a **"Trust Score"** [43] for you in real-time based on: **Your Gait:** The rhythm of your walk (detected by ISAC radar). **Your Biology:** Your heartbeat and breathing patterns. **Your Behavior:** The way you hold your phone, your typing speed, and your location history [44].
 
