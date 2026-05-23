@@ -4,9 +4,13 @@ Let's talk about the thing that 002 left hanging.
 
 At the end of the Zero Trust text, we dropped a line: *"They are not just watching… they are cloning."* We didn't explain it. We're explaining it now.
 
-But first, a detour through industrial engineering. Bear with us.
+But first, a detour through the space age. Bear with us.
 
-In 2002, a professor named **Michael Grieves** presented a concept at a product lifecycle management conference in Michigan [49]. He called it the **"Digital Twin"**: a virtual replica of a physical object, continuously updated by sensor data, used to simulate, predict, and optimize the behavior of its physical counterpart. General Electric ran with it to monitor jet engines. NASA retroactively claimed it had been doing something similar since Apollo 13 [50]. For twenty years, Digital Twins lived in factories. They modeled turbines. They modeled bridges. They modeled urban drainage systems.
+The concept is older than the name. In the **1960s**, NASA was already building real-time computational models of spacecraft — virtual replicas that engineers on the ground could interact with while the physical object was in flight [49]. They didn't call it anything in particular. It was just how you kept an astronaut alive when the hardware was 400,000 kilometers away and you couldn't send a technician. The most famous case is **Apollo 13**: when the oxygen tank ruptured in 1970, engineers on the ground ran simulations on their physical replica of the spacecraft to find a solution before the crew ran out of time. The twin saved the mission. Nobody used that word yet.
+
+In **2002**, a professor named **Michael Grieves** put a label on it [50]. He called it the **"Digital Twin"**: a virtual replica of a physical object, continuously updated by sensor data, used to simulate, predict, and optimize the behavior of its physical counterpart. General Electric ran with it to monitor jet engines. For twenty years, Digital Twins lived in factories. They modeled turbines. They modeled bridges. They modeled urban drainage systems.
+
+The concept spent sixty years being developed in aerospace and industry before anyone thought to apply it to people. That gap is closing now.
 
 Nobody modeled people.
 
@@ -82,11 +86,11 @@ Sincerely yours,
 
 ### **Notes & References**
 
-**[49] - Grieves, M.:** "Digital Twin: Manufacturing Excellence through Virtual Factory Replication," *White Paper*, 2014. The original 2002 conference presentation predates this paper but is not publicly archived; this is the canonical published version of the concept.
-[Link](https://www.researchgate.net/publication/275211047_Digital_Twin_Manufacturing_Excellence_through_Virtual_Factory_Replication)
+**[49] - NASA / Görtz, M.:** The 1960s NASA origin of the Digital Twin concept is confirmed in peer-reviewed literature. See: Görtz, M., "Digital twins: past, present and future," *Scientific Reports*, vol. 16, article 10510, 2026: "In the 1960s, NASA pioneered the idea of a digital twin to simulate spacecraft and troubleshoot issues in real time." The Apollo 13 case (1970) is the most cited operational example. See also: Katsoulakis, E. et al., "Digital twins for health: A scoping review," *npj Digital Medicine*, 7, 77, 2024.
+[Link](https://www.nature.com/articles/s41598-026-45272-z)
 
-**[50] - NASA / GE Digital:** The Apollo 13 precedent is widely cited in Digital Twin literature as a retroactive example. The modern industrial term was popularized by GE's asset performance management division from approximately 2012 onward. See: "The Digital Twin: Compressing Time-to-Value for Digital Industrial Companies," *GE Digital White Paper*, 2016.
-[Link](https://www.ge.com/digital/blog/what-is-digital-twin)
+**[50] - Grieves, M.:** "Digital Twin: Manufacturing Excellence through Virtual Factory Replication," *White Paper*, 2014. The original formulation of the term dates to a 2002 product lifecycle management conference in Michigan. This is the canonical published version. The sixty-year gap between the NASA concept and the Grieves label matters: it means the technology was mature long before anyone named it, which is usually a sign that deployment outruns discussion.
+[Link](https://www.researchgate.net/publication/275211047_Digital_Twin_Manufacturing_Excellence_through_Virtual_Factory_Replication)
 
 **[51] - Hexa-X:** "D1.2: Expanded 6G Vision, Use Cases and Societal Values," *Hexa-X EU 6G Flagship Project*, 2021. Section 3.4 describes the Digital Twin of the Physical World as a primary use case pillar.
 [Link](https://hexa-x.eu/wp-content/uploads/2022/03/Hexa-X_D1.2.pdf)
